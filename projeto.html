@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Comparador de Investimentos</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 20px;
+        background-color: #f4f7fb;
+        color: #333;
+      }
+      h1 {
+        color: #004d7a;
+        text-align: center;
+      }
+      label {
+        font-size: 16px;
+        color: #004d7a;
+      }
+      select,
+      input {
+        padding: 10px;
+        margin: 10px 0;
+        width: 100%;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        font-size: 16px;
+      }
+      button {
+        padding: 12px 20px;
+        background-color: #006f95;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 16px;
+        width: 100%;
+      }
+      button:hover {
+        background-color: #005c7f;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+        background-color: white;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      }
+      table,
+      th,
+      td {
+        border: 1px solid #dcdfe1;
+      }
+      th,
+      td {
+        padding: 12px;
+        text-align: center;
+      }
+      th {
+        background-color: #006f95;
+        color: white;
+      }
+      tr:nth-child(even) {
+        background-color: #f1f1f1;
+      }
+      .instituicao {
+        display: flex;
+        gap: 10px;
+        margin-top: 10px;
+      }
+      .instituicao input {
+        flex: 1;
+      }
+      .resultado {
+        margin-top: 20px;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Comparador de Instituições Financeiras</h1>
+
+    <label for="produto">Escolha o Produto de Investimento:</label>
+    <select id="produto">
+      <option value="Poupança">Poupança</option>
+      <option value="CDB">CDB</option>
+      <option value="LCI">LCI</option>
+      <option value="LCA">LCA</option>
+      <option value="Fundos">Fundos de Investimento</option>
+    </select>
+
+    <label for="valor">Valor a Investir (R$):</label>
+    <input type="number" id="valor" placeholder="Ex: 10000" />
+
+    <label for="prazo">Prazo (em meses):</label>
+    <input type="number" id="prazo" placeholder="Ex: 12" />
+
+    <label for="cdi">CDI Atual (% ao ano):</label>
+    <input type="number" id="cdi" value="14.65" step="0.01" />
+
+    <h3>Instituições Financeiras e Rentabilidades (% do CDI ao ano)</h3>
+    <div id="instituicoes"></div>
+
+    <button onclick="adicionarInstituicao()">Adicionar Instituição</button>
+    <br /><br />
+    <button onclick="simular()">Simular</button>
+
+    <div id="resultado" class="resultado"></div>
+
+    <script>
+      function adicionarInstituicao() {
+        const div = document.createElement("div");
+        div.className = "instituicao";
+        div.innerHTML = `
+          <input type="text" placeholder="Nome da Instituição" class="nomeInstituicao">
+          <input type="number" placeholder="% do CDI" class="taxaInstituicao">
+        `;
+        document.getElementById("instituicoes").appendChild(div);
+      }
+
+      function calcularIR(produto, prazoDias) {
+        if (produto === "LCI" || produto === "LCA") return 0;
+        if (produto === "Poupança") return 0;
+
+        if (prazoDias <= 180) return 0.225;
+        if (prazoDias <= 360) return 0.2;
+        if (prazoDias <= 720) return 0.175;
+        return 0.15;
+      }
+
+      function simular() {
+        const produto = document.getElementById("produto").value;
+        const valorInvestido = parseFloat(
+          document.getElementById("valor").value
+        );
+        const prazoMeses = parseInt(document.getElementById("prazo").value);
+        const CDI_ATUAL = parseFloat(document.getElementById("cdi").value);
+
+        if (
+          isNaN(valorInvestido) ||
+          isNaN(prazoMeses) ||
+          isNaN(CDI_ATUAL) ||
+          valorInvestido <= 0 ||
+          prazoMeses <= 0 ||
+          CDI_ATUAL <= 0
+        ) {
+          alert("Por favor, preencha valor, prazo e CDI corretamente.");
+          return;
+        }
+
+        const nomes = document.querySelectorAll(".nomeInstituicao");
+        const taxas = document.querySelectorAll(".taxaInstituicao");
+
+        let tabela = `<h2>Resultado da Simulação - ${produto}</h2>`;
+        tabela += `
+          <table>
+            <tr>
+              <th>Instituição</th>
+              <th>Valor Investido (R$)</th>
+              <th>% do CDI</th>
+              <th>Valor Bruto (R$)</th>
+              <th>IR (R$)</th>
+              <th>Valor Líquido (R$)</th>
+            </tr>
+        `;
+
+        for (let i = 0; i < nomes.length; i++) {
+          const nome = nomes[i].value;
+          const percentualCDI = parseFloat(taxas[i].value);
+
+          if (nome && !isNaN(percentualCDI)) {
+            const taxaAnoReal = (CDI_ATUAL * percentualCDI) / 100;
+            const taxaMes = Math.pow(1 + taxaAnoReal / 100, 1 / 12) - 1;
+            const valorBruto =
+              valorInvestido * Math.pow(1 + taxaMes, prazoMeses);
+
+            const prazoDias = prazoMeses * 30;
+            const aliquotaIR = calcularIR(produto, prazoDias);
+            const rendimento = valorBruto - valorInvestido;
+            const valorIR = rendimento * aliquotaIR;
+
+            const valorLiquido = valorBruto - valorIR;
+
+            tabela += `
+              <tr>
+                <td>${nome}</td>
+                <td>R$ ${valorInvestido.toFixed(2)}</td>
+                <td>${percentualCDI.toFixed(2)}%</td>
+                <td>R$ ${valorBruto.toFixed(2)}</td>
+                <td>R$ ${valorIR.toFixed(2)}</td>
+                <td>R$ ${valorLiquido.toFixed(2)}</td>
+              </tr>
+            `;
+          }
+        }
+
+        tabela += "</table>";
+        document.getElementById("resultado").innerHTML = tabela;
+      }
+
+      // Adicionar 2 instituições iniciais
+      adicionarInstituicao();
+      adicionarInstituicao();
+    </script>
+  </body>
+</html>
