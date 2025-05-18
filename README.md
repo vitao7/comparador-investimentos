@@ -18,7 +18,8 @@ https://github.com/vitao7/comparador-investimentos
 
 ## 📁 Estrutura
 - `projeto.html`: Página principal com a lógica de simulação
-- `docs/`: Relatório final e documentos do projeto
+- `Relatório Final – Projeto Integrado II`: Relatório final do projeto
+- `Documentação Técnica — Comparador de Investimentos`: Documentação Técnica do projeto
 
 ## 👨‍💻 Equipe
 - Víctor Lucas de Menezes Freitas – RA: 193516  
