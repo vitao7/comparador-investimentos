@@ -23,7 +23,7 @@ https://github.com/vitao7/comparador-investimentos
 ## 👨‍💻 Equipe
 - Víctor Lucas de Menezes Freitas – RA: 193516  
 - Maria Eduarda Andrade Dias – RA: 194560  
-- Hiago Augusto Maiotto – RA: 194281
+- Hiago Augusto Maioto – RA: 194281
 
 ## 📄 Licença
 Uso acadêmico e não comercial.
