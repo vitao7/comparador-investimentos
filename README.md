@@ -9,7 +9,7 @@ Simular e comparar produtos de investimento (CDB, LCI, LCA, Poupança, Fundos) c
 1. Clone o repositório:
 https://github.com/vitao7/comparador-investimentos
 
-3. Abra o arquivo `index.html` em qualquer navegador.
+3. Abra o arquivo `projeto.html` em qualquer navegador.
 
 ## 🛠️ Tecnologias
 - HTML5
@@ -17,7 +17,7 @@ https://github.com/vitao7/comparador-investimentos
 - JavaScript
 
 ## 📁 Estrutura
-- `index.html`: Página principal com a lógica de simulação
+- `projeto.html`: Página principal com a lógica de simulação
 - `docs/`: Relatório final e documentos do projeto
 
 ## 👨‍💻 Equipe
